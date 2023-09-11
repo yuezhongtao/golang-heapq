@@ -21,6 +21,7 @@ func (h *HeapQ[T]) Push(item T) {
 	h.siftDown(0, h.len()-1)
 }
 
+// Pop Pop the smallest item off the heap, maintaining the heap invariant.
 func (h *HeapQ[T]) Pop() *T {
 	if h.isEmpty() {
 		return nil
@@ -36,6 +37,7 @@ func (h *HeapQ[T]) Pop() *T {
 	return &lastelt
 }
 
+// Replace Pop and return the current smallest value, and add the new item
 func (h HeapQ[T]) Replace(item T) *T {
 	if h.isEmpty() {
 		return nil
@@ -47,7 +49,12 @@ func (h HeapQ[T]) Replace(item T) *T {
 }
 
 func (h HeapQ[T]) PushPop(item T) *T {
-	return nil
+	// Fast version of a heappush followed by a heappop
+	if !h.isEmpty() && h.heap[0] < item {
+		item, h.heap[0] = h.heap[0], item
+		h.siftUp(0)
+	}
+	return &item
 }
 
 func (h HeapQ[T]) isEmpty() bool {
